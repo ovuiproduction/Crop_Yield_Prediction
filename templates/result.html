@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/css/result.css" />
+    <title>Crop Yield</title>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <div class="nav">
+      <a href="/home">Home</a>
+    </div>
+
+    <!-- Date Section -->
+    <div class="section-header">
+      <h2>{{year}} - {{season}}</h2>
+    </div>
+
+    <!-- Main Container -->
+    <div class="commodity-container">
+      <div id="cropimg" class="commodity-img">
+        <img src="{{cropface}}" alt="Crop Image" />
+      </div>
+
+      <div class="form-details-block">
+        <div class="cropname-block">{{cropname}}</div>
+        <div class="info-block">
+          <div class="state-block info-item">
+            <p>Dist</p>
+            <div class="value-div">
+              <span class="value">{{dist}}</span>
+            </div>
+          </div>
+
+          <div class="state-block info-item">
+            <p>Sub-Division</p>
+            <div class="value-div">
+              <span class="value">{{subdivision}}</span>
+            </div>
+          </div>
+
+          <div class="rainfall-block info-item">
+            <p>Rainfall</p>
+            <div class="value-div">
+              <span class="value">{{average_rain_fall}}</span>
+              <span class="unit">mm</span>
+            </div>
+          </div>
+
+          <div class="temp-block info-item">
+            <p>Tempreture</p>
+            <div class="value-div">
+              <span class="value">{{temperature}}</span>
+              <span class="unit">Celcius</span>
+            </div>
+          </div>
+
+          <div class="area-block info-item">
+            <p>Area</p>
+            <div class="value-div">
+              <span class="value">{{area}}</span>
+              <span class="unit">hecter</span>
+            </div>
+          </div>
+
+          <div class="pesticide-used-block info-item">
+            <p>Pesticides/Fertilizer</p>
+            <div class="value-div">
+              <span class="value">{{fp_per_unit_area}}</span>
+              <span class="unit">tonnes/hecter</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="statistics-container">
+        <div class="current-statistics">
+          {% if curr_year_prediction %}
+          <div class="stat-card">
+            <p>Predicted Yield ({{year}})</p>
+            <div class="value-div">
+              <span class="yield-value">{{curr_year_prediction}}</span>
+              <span class="unit">Kg/hec</span>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="next-year-statistics">
+          {% if curr_year_prediction_tonnes %}
+          <div class="stat-card">
+            <p>Predicted Yield ({{year}})</p>
+            <div class="value-div">
+              <span class="yield-value">{{curr_year_prediction_tonnes}}</span>
+              <span class="unit">tonne/hec</span>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Market Guide -->
+    {% if market_data %}
+    <div class="section-header"><h2>Market Guide</h2></div>
+    <div class="market-guide-container">
+      <ul class="market-list">
+        {% for market in market_data %}
+        <li class="market-block">
+          <article>
+            <h3>{{ market.market_name }}</h3>
+            <ul>
+              {% for strength in market.strengths %}
+              <li>{{strength}}</li>
+              {% endfor %}
+            </ul>
+            <p>{{market.best_for}}</p>
+          </article>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Goverment Guide -->
+    {% if goverment_data %}
+    <div class="section-header"><h2>Goverment Scheme</h2></div>
+    <div class="market-guide-container">
+      <ul class="market-list">
+        {% for scheme in goverment_data %}
+        <li class="market-block">
+          <article>
+            <h3>{{ scheme.scheme_name }}</h3>
+            <ul>
+              {% for benefit in scheme.benefits %}
+              <li>{{benefit}}</li>
+              {% endfor %}
+            </ul>
+            <p>{{scheme.purpose}}</p>
+          </article>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    <!-- Footer -->
+    <footer>
+      <p>© 2024 Yield Signal. All rights reserved.</p>
+    </footer>
+
+    <script src="/static/script/result.js"></script>
+  </body>
+</html>

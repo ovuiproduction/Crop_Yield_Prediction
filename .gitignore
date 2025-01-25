@@ -1,0 +1,10 @@
+/.env
+model.pkl
+preprocessor.pkl
+RainfallModel.pkl
+RainfallPreprocessor.pkl
+TempretureModel.pkl
+TempreturePreprocessor.pkl
+jmodel.pkl
+jpreprocessor.pkl
+/models
