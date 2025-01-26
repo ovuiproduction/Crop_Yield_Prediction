@@ -13,3 +13,11 @@ document.getElementById("next").addEventListener("click" , ()=>{
     document.getElementById("mycarousel").style.backgroundImage = `url(${backgroundImagestore[count]})`;
     count = (count+1) % 3;
 });
+
+document.getElementById('gov_scheme_btn').addEventListener("click",()=>{
+    document.getElementById('gov_scheme_block_start').scrollIntoView({
+        block:'start',
+        behavior:'smooth',
+        inline:'start'
+    })
+});

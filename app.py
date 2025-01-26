@@ -13,10 +13,13 @@ load_dotenv()
 
 #loading models
 try:
+    # yield prediction model and preprocessor
     yield_model = pickle.load(open('models/yield_model.pkl', 'rb'))
     yield_preprocessor = pickle.load(open('models/yield_preprocessor.pkl', 'rb'))
+    # rainfall prediction model and preprocessor
     rainfall_model = pickle.load(open('models/maharashtra_rainfall_model.pkl', 'rb'))
     rainfall_preprocessor = pickle.load(open('models/rainfall_preprocessor.pkl', 'rb'))
+    # temperature model and preprocessor
     temperature_model = pickle.load(open('models/temperature_model.pkl', 'rb'))
     temperature_preprocessor = pickle.load(open('models/temperature_preprocessor.pkl', 'rb'))
 except FileNotFoundError as e:
@@ -47,21 +50,19 @@ crop_images = {
     'SOYABEAN': '/static/images/Soyabean_img.webp',
 }
 
-# gemini
+# gemini request
 def gemini_response(Prompt):
     response = geminimodel.generate_content(Prompt)
     return response
 
-# format data
+# format data (gemini response)
 def get_data(Prompt):
     response = gemini_response(Prompt)
     try:
         json_string = response.text.strip()
         json_string = re.sub(r"```(?:json)?\s*", "", json_string)
         json_string = re.sub(r"```", "", json_string)
-        
         json_data = json.loads(json_string)
-        
         return json_data
     
     except json.JSONDecodeError as e:
@@ -71,6 +72,7 @@ def get_data(Prompt):
         print("Error:", e)
         return None
 
+# Gemini in use
 def geminiInUse(cropname):
     # Market Info
     Prompt = f"""Provide information about the 5 best markets for selling {cropname} in Maharashtra in JSON format. The JSON should be an array of objects. Each object should have the following keys: 'market_name', 'strengths' (an array of strings), and 'best_for'.do not write the disclaimer only json data of markets"""
@@ -82,6 +84,7 @@ def geminiInUse(cropname):
     
     return market_data,goverment_data
 
+# rainfall and temperature prediction
 def rainfallAndTempreturePrediction(subdivision,year):
     months = random.sample(range(1, 13), 6)
     aggregated_rainfall = 0
@@ -111,28 +114,33 @@ def rainfallAndTempreturePrediction(subdivision,year):
    
     return aggregated_rainfall,aggregated_temperature
 
+# yield prediction function
 def yieldPrediction(year, dist, cropname,area,aggregated_rainfall,aggregated_temperature):
     column_names = ['Year', 'Dist Name', 'Crop','Area(1000 ha)','Total Rainfall','Avg Temp']
     features = [[year, dist, cropname,area,aggregated_rainfall,aggregated_temperature]]
     features_df = pd.DataFrame(features, columns=column_names)
     transformed_features = yield_preprocessor.transform(features_df)
     prediction = yield_model.predict(transformed_features).reshape(1,-1)
-    predicted_value = round(prediction[0][0] , 3)
+    predicted_value = round(prediction[0][0] , 2)
     return predicted_value
 
+
+# root route
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# home route
 @app.route('/home')
 def home():
     return render_template('homepage.html')    
 
+# predict form route
 @app.route('/predict')
 def predict():
     return render_template('predict.html')
 
-
+# result route
 @app.route('/result',methods=['POST'])
 def result():
     if request.method == 'POST':
@@ -150,7 +158,7 @@ def result():
         # current year crop yield
         curr_year_prediction = yieldPrediction(year, dist, cropname,area,curr_aggregated_rainfall,curr_aggregated_temperature)
         # current year crop yield in tonnes
-        curr_year_prediction_tonnes = round(curr_year_prediction/1000,3)
+        curr_year_prediction_tonnes = round(curr_year_prediction/1000,2)
         
         # Gemini In Use
         market_data,goverment_data = geminiInUse(cropname)
