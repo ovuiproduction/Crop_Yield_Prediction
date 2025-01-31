@@ -10,11 +10,11 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="/static/css/style.css" />
-    <title>Crop Yield Prediction</title>
+    <title>Kisan-DSS</title>
   </head>
   <body>
     <nav>
-      <div class="logotext">Crop Yield Forcasting</div>
+      <div class="logotext">Kisan-DSS</div>
       <div class="nav-content">
         <div class="nav-2"><a href="/home">Home</a></div>
         <div class="nav-2"><a href="">contact</a></div>
@@ -144,7 +144,10 @@
           </div>
         </div>
         <div class="btn-block">
-          <button class="submitbtn">Submit</button>
+          <button id="predict_btn" class="submitbtn">
+            Submit
+          </button>
+          <div id="loader" class="loader"></div>
         </div>
       </form>
     </div>

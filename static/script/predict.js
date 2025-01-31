@@ -29,20 +29,30 @@ const districtToSubdivision = {
 
 const districtElement = document.getElementById("district");
 districtElement.addEventListener('change', autoSelectSubdivision);
+
 // Function to auto-select the subdivision based on the selected district
 function autoSelectSubdivision() {
   console.log("ok");
-  // if(district.value != null){
     const district = districtElement.value;
     const subdivision = districtToSubdivision[district];
-  
     const subdivisionDropdown = document.getElementById("subdivision");
-    // Reset the subdivision dropdown to "Subdivision"
     subdivisionDropdown.value = " ";
-  
-    // If a subdivision exists for the selected district, select it
     if (subdivision) {
       subdivisionDropdown.value = subdivision;
     }
-  // }
 }
+
+// submit progress
+const predict_btn = document.getElementById('predict_btn');
+
+window.addEventListener('pageshow',(event)=>{
+  if (event.persisted) { 
+    document.getElementById('loader').style.display = "none";
+    predict_btn.style.display="block"
+}
+});
+
+predict_btn.addEventListener('click',()=>{
+  document.getElementById('loader').style.display = "grid";
+  predict_btn.style.display="none";
+});
