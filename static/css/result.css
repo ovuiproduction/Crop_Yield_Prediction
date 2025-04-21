@@ -232,3 +232,37 @@ footer {
     width: 100%;
     bottom: 0;
 }
+
+.statistics-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 128, 0, 0.12); /* light green background */
+    border: 2px solid rgba(0, 128, 0, 0.3);
+    border-radius: 16px;
+    padding: 25px 40px;
+    margin: 30px auto;
+    width: fit-content;
+    box-shadow: 0 8px 20px rgba(0, 100, 0, 0.2);
+    transition: transform 0.3s ease;
+  }
+  
+  .statistics-container:hover {
+    transform: scale(1.03); /* slight zoom on hover */
+  }
+  
+  .current-statistics h2:first-child {
+    font-size: 22px;
+    color: #005500;
+    margin-bottom: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  
+  .current-statistics h2:last-child {
+    font-size: 32px;
+    font-weight: 700;
+    color: #007e33; /* vivid green */
+    margin: 0;
+  }
+  

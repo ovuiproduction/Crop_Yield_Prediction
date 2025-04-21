@@ -3,6 +3,7 @@ body{
   padding:0px;
   background-color: forestgreen;
   color:aliceblue;
+  overflow: hidden;
 }
 
 nav{
@@ -76,6 +77,7 @@ nav .nav-content .nav-3 a:hover{
   column-gap:1rem;
   row-gap:2rem;
   margin: auto;
+  overflow-y: hidden;
 }
 
 .formcontent{

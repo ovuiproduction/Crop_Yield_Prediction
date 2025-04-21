@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/static/css/style.css" />
     <link rel="stylesheet" href="/static/css/bot.css">
     <link rel="stylesheet" href="/static/css/traslator.css">
+
     <title>Kisan-DSS</title>
   </head>
   <body>
@@ -22,27 +23,26 @@
     </nav>
 
     <div class="outer_form_block">
-      <form action="/result" method="post">
+      <form action="/result/price" method="post">
         <!-- crop name -->
         <div class="form-block">
           <!-- crops -->
           <div class="formcontent">
             <label>Crop</label>
             <select name="cropname">
-              <option value="">Crop Name</option>
-              <option value="RICE">RICE</option>
-              <option value="KHARIF SORGHUM">KHARIF SORGHUM</option>
-              <option value="PEARL MILLET">PEARL MILLET</option>
-              <option value="MAIZE">MAIZE</option>
-              <option value="FINGER MILLET">FINGER MILLET</option>
-              <option value="PIGEONPEA">PIGEONPEA</option>
-              <option value="MINOR PULSES">MINOR PULSES</option>
-              <option value="GROUNDNUT">GROUNDNUT</option>
-              <option value="SESAMUM">SESAMUM</option>
-              <option value="SUNFLOWER">SUNFLOWER</option>
-              <option value="SOYABEAN">SOYABEAN</option>
+              <option value="">Commodity</option>
+              <option value="Jowar">Jowar</option>
               <option value="SUGARCANE">SUGARCANE</option>
               <option value="COTTON">COTTON</option>
+              <option value="MAIZE">MAIZE</option>
+            </select>
+          </div>
+
+          <div class="formcontent">
+            <label>variety</label>
+            <select name="variety">
+              <option value="">variety</option>
+              <option value="Other">Other</option>
             </select>
           </div>
           <!-- year -->
@@ -52,12 +52,21 @@
           </div>
           <!-- season -->
           <div class="formcontent">
-            <label>Season</label>
-            <select name="season">
-              <option value="">Season</option>
-              <option value="Rabi">Rabi</option>
-              <option value="Kharif">Kharif</option>
-              <option value="Whole Year">Whole Year</option>
+            <label>Month</label>
+            <select name="month">
+              <option value="">Month</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
             </select>
           </div>
           <!-- state -->
@@ -73,69 +82,20 @@
             <label>Dist</label>
             <select name="dist" id="district">
               <option value="">Dist</option>
-              <option value="Ahmednagar">Ahmednagar</option>
-              <option value="Akola">Akola</option>
-              <option value="Wardha">Wardha</option>
-              <option value="Thane">Thane</option>
               <option value="Solapur">Solapur</option>
               <option value="Satara">Satara</option>
               <option value="Sangli">Sangli</option>
-              <option value="Ratnagiri">Ratnagiri</option>
-              <option value="Raigad">Raigad</option>
               <option value="Pune">Pune</option>
-              <option value="Parbhani">Parbhani</option>
-              <option value="Osmanabad">Osmanabad</option>
-              <option value="Nasik">Nasik</option>
-              <option value="Nanded">Nanded</option>
-              <option value="Nagpur">Nagpur</option>
               <option value="Kolhapur">Kolhapur</option>
-              <option value="Jalgaon">Jalgaon</option>
-              <option value="Dhule">Dhule</option>
-              <option value="Chandrapur">Chandrapur</option>
-              <option value="Buldhana">Buldhana</option>
-              <option value="Bhandara">Bhandara</option>
-              <option value="Beed">Beed</option>
-              <option value="Aurangabad">Aurangabad</option>
-              <option value="Amarawati">Amarawati</option>
-              <option value="Yeotmal">Yeotmal</option>
-              <option value="Bombay">Bombay</option>
             </select>
           </div>
 
           <!-- subdivision -->
           <div class="formcontent">
-            <label>Subdivision</label>
-            <select name="subdivision" id="subdivision">
-              <option value="">Subdivision</option>
-              <option value="Marathwada">Marathwada</option>
-              <option value="Madhya Maharashtra">Madhya Maharashtra</option>
-              <option value="Vidarbha">Vidarbha</option>
-              <option value="Konkan">Konkan</option>
+            <label>Market</label>
+            <select name="market" id="market">
+              <option value="">Market</option>
             </select>
-          </div>
-
-          <!-- Area -->
-          <div class="formcontent">
-            <label for="area">Area in Hecters</label>
-            <input
-              name="area"
-              type="number"
-              step="any"
-              placeholder="Enter area (hecters)"
-            />
-          </div>
-
-          <!-- fertilizer , pesticide per hecter -->
-          <div class="formcontent">
-            <label for="fp_per_unit_area"
-              >Fertilizer ,Pesticide (tonnes/hecter)</label
-            >
-            <input
-              name="fp_per_unit_area"
-              type="number"
-              step="any"
-              placeholder="Enter pesticides tonnes/hecter"
-            />
           </div>
 
           <div class="formcontent">
@@ -150,7 +110,10 @@
           <div id="loader" class="loader"></div>
         </div>
       </form>
+   
     </div>
+
+
 
     <footer>
       <p>अन्नदाता सुखी भव</p>
@@ -187,7 +150,7 @@
       src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
     ></script>
 
-    <script src="/static/script/predict.js"></script>
+    <script src="/static/script/predict_price.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"

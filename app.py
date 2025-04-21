@@ -1,4 +1,4 @@
-from flask import Flask,request, render_template
+from flask import Flask,request, render_template,jsonify
 import pickle
 import pandas as pd
 import os
@@ -8,8 +8,12 @@ import json
 import google.generativeai as genai
 import re
 import random
+import os
+from google.generativeai import GenerativeModel
+from flask_cors import CORS
 
 load_dotenv()
+
 
 #loading models
 try:
@@ -22,16 +26,21 @@ try:
     # temperature model and preprocessor
     temperature_model = pickle.load(open('models/temperature_model.pkl', 'rb'))
     temperature_preprocessor = pickle.load(open('models/temperature_preprocessor.pkl', 'rb'))
+    # price model
+    price_model = pickle.load(open('models/price_model.pkl', 'rb'))
+    price_preprocessor = pickle.load(open('models/price_preprocessor.pkl', 'rb'))
+    
 except FileNotFoundError as e:
     raise FileNotFoundError(f"Required file missing: {e}")
 
 #flask app
 app = Flask(__name__, template_folder='templates', static_folder='static')
-
+CORS(app)
 # gemini configuration
 API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key = API_KEY)
 geminimodel = genai.GenerativeModel("gemini-1.5-flash")
+
 
 # crop images
 crop_images = {
@@ -48,6 +57,7 @@ crop_images = {
     'SESAMUM': '/static/images/Sesamum_img.webp',
     'SUNFLOWER': '/static/images/Sunflower_img.jpg',
     'SOYABEAN': '/static/images/Soyabean_img.webp',
+    'Jowar':'/static/images/jowarlogo.webp'
 }
 
 # gemini request
@@ -124,6 +134,14 @@ def yieldPrediction(year, dist, cropname,area,aggregated_rainfall,aggregated_tem
     predicted_value = round(prediction[0][0] , 2)
     return predicted_value
 
+def pricePrediction(dist,market, cropname,variety,year,month,aggregated_rainfall):
+    column_names = ['District', 'Market', 'Commodity', 'Variety', 'Year', 'Month','Rainfall']
+    features = [[dist,market, cropname,variety,year,month,aggregated_rainfall]]
+    features_df = pd.DataFrame(features, columns=column_names)
+    transformed_features = price_preprocessor.transform(features_df)
+    prediction = price_model.predict(transformed_features).reshape(1,-1)
+    predicted_value = round(prediction[0][0] , 2)
+    return predicted_value
 
 # root route
 @app.route('/')
@@ -139,6 +157,36 @@ def home():
 @app.route('/predict')
 def predict():
     return render_template('predict.html')
+
+@app.route('/predict/price')
+def predictprice():
+    return render_template('predict_price.html')
+
+@app.route('/result/price',methods=['POST'])
+def resultprice():
+    cropname = request.form['cropname']
+    year = int(request.form['year'])
+    dist = request.form['dist']
+    month = request.form['month']
+    # state = request.form['state']
+    market = request.form['market']
+    variety = request.form['variety']
+    subdivision = "Madhya Maharashtra"
+    # current year rainfall and temperature prediction
+    aggregated_rainfall,curr_aggregated_temperature = rainfallAndTempreturePrediction(subdivision,year)
+    predicted_price = pricePrediction(dist,market, cropname,variety,year,month,aggregated_rainfall)
+    return render_template('result_price.html',
+                           year=year,
+                           market=market,
+                           month=month,
+                           cropface = crop_images.get(cropname),
+                           cropname=cropname,
+                           dist=dist,
+                           subdivision = subdivision,
+                           average_rain_fall=aggregated_rainfall,
+                           temperature=curr_aggregated_temperature, 
+                           predicted_price=predicted_price,
+                           )
 
 # result route
 @app.route('/result',methods=['POST'])
@@ -179,6 +227,37 @@ def result():
                                                market_data = market_data,
                                                goverment_data = goverment_data
                                              )
+        
+
+
+
+# Chat Endpoint
+@app.route("/chat", methods=["POST"])
+def chat():
+    user_input = request.json.get("userInput", "")
+    try:
+        # Create Generative Model
+        model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+
+        # Custom prompt
+        messages = [
+            {
+                "role": "user",
+                "parts": ["""
+You are AgriBot, an advanced agriculture assistant specializing in market intelligence, crop insights, and direct market access for farmers in Maharashtra...
+(Use the same prompt as above)
+"""]
+            },
+            {"role": "model", "parts": ["Hello! I'm AgriBot..."]}
+        ]
+
+        # Chat response
+        result = model.start_chat(history=messages)
+        reply = result.send_message(user_input).text
+        print(reply)
+        return jsonify({"response": reply})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__=="__main__":
     port = 5000

@@ -1,0 +1,60 @@
+#google_translate_element {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 45px;
+  height: 45px;
+  background: #f8f9fa;
+  border-radius: 50%;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  white-space: nowrap;
+  gap: 6px;
+  padding: 5px;
+  z-index: 2000;
+  color: #343a40;
+}
+
+/* On Hover - Expand */
+#google_translate_element:hover {
+  width: auto;
+  height: auto;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+/* Hide Text Initially */
+.translate-text {
+  display: none;
+  font-size: 14px;
+  color: #343a40;
+  font-weight: bold;
+}
+
+/* Show Text & Dropdown When Hovering */
+#google_translate_element:hover .translate-text {
+  display: inline-block;
+}
+
+#google_translate_element select {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.goog-te-gadget {
+  display: none;
+}
+
+/* Show Google Translate Only When Hovering */
+#google_translate_element:hover .goog-te-gadget {
+  display: inline-block;
+}
